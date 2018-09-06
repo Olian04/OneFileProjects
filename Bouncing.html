@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bouncing | One File Project</title>
+    <style>
+        * {
+           margin: 0;
+           padding: 0; 
+           overflow: hidden;
+        }
+    </style>
+</head>
+<body onload="run()">
+    <canvas></canvas>
+    <script>
+        function run() {
+            const canvas = document.getElementsByTagName('canvas')[0];
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const updateLength = Math.PI / 20;
+            const bounceLength = canvas.width / 10;
+            let lines = new Array(10).fill(0).map((_, i) => ({
+                x: 0 + i * bounceLength,
+                y: canvas.height / 2,
+                r: bounceLength / 2,
+                arc: {
+                    a: Math.PI,
+                    b: Math.PI
+                },
+                delay: i*20
+            }));
+            const drawBox = (x, y) => {
+                ctx.fillRect(x-3, y, 6, 6);
+            }
+            const drawLine = (x, y, r, i, j) => {
+                ctx.arc(x+r, y, r, i, j);
+            }
+            const drawSegment = ({x, y, r, arc: {a: i, b: j}}) => {
+                drawLine(x, y, r, i, j);
+                drawBox(x, y);
+                drawBox(x+r*2, y);
+            }
+            setInterval(() => {
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'red';
+                lines.forEach(line => {
+                    ctx.beginPath();
+                    drawSegment(line);
+                    ctx.stroke();
+                });
+                lines = lines.map(line => {
+                    if (line.delay > 0) return {...line, delay: line.delay-1};
+                    if (line.arc.b < Math.PI*2) {
+                        line.arc.b += updateLength;
+                    } else if (line.arc.a < Math.PI*2) {
+                        line.arc.a += updateLength;
+                    } else {
+                        line.arc = {
+                            a: Math.PI,
+                            b: Math.PI
+                        }
+                    }
+                    return line;
+                });
+            }, 33);
+        }
+    </script>
+</body>
+</html>
