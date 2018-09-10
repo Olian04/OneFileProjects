@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Touch | One File Project</title>
+    <style>
+        :root {
+        }
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        body {
+            height: 100vh;
+            width: 100vw;
+        }
+        img {
+            box-sizing: border-box;
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            left: 25%;
+            top:  25%;
+            outline: 2px white solid;
+            outline-offset: -2px;
+        }
+        .filter {
+            --position-x: 30%;
+            --position-y: 30%;
+            --color: black;
+            position: absolute;
+            height: 30%;
+            width: 30%;
+            left: calc(var(--position-x) - 15%); 
+            top: calc(var(--position-y) - 15%);
+            transition: all 0.5s ease;
+            background: var(--color);
+        }
+    </style>
+</head>
+<body>
+    <img src="https://i.ytimg.com/vi/YCaGYUIfdy4/maxresdefault.jpg">
+    <div class="filters">
+        <div class="filter" style="--color: rgba(200, 50, 50, 0.2); --position-x: 30%; --position-y: 30%;"></div>
+        <div class="filter" style="--color: rgba(50, 200, 50, 0.2); --position-x: 80%; --position-y: 30%;"></div>
+        <div class="filter" style="--color: rgba(50, 50, 200, 0.2); --position-x: 30%; --position-y: 80%;"></div>
+        <div class="filter" style="--color: rgba(50, 50, 50, 0.2); --position-x: 80%; --position-y: 80%;"></div>
+    </div>
+    <script>
+        const filters =  document.querySelectorAll('.filter');
+        filters.forEach(filter => {
+            filter.ontouchmove = (e) => {
+                const { clientX: x, clientY: y } = e.changedTouches[0];
+                requestAnimationFrame(() => {
+                    filter.style.setProperty('--position-x', ''+x+'px');
+                    filter.style.setProperty('--position-y', ''+y+'px');
+                })
+            }
+        });
+    </script>
+</body>
+</html>
