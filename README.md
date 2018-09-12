@@ -1,6 +1,7 @@
 # [OneFileProjects](https://olian04.github.io/OneFileProjects/)
 
-One file projects needs to:
-* Only be one html file, thats it.
-* Be written in one short sitting
-* Be an experiment
+One file projects needs to be:
+* One html file, thats it.
+* Be written in a single 1h sitting.
+* Be an experiment.
+* Only vanilla js.
