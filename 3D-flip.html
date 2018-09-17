@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>3D Flip | One File Projects</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .container {
+            position: absolute;
+            --height: 200px;
+            --width: 100%;
+            top: calc(50% - var(--height)/2);
+            width: var(--width);
+            height: var(--height);
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-around;
+        }
+
+        .card {
+            --rotation: 0deg;
+            --height: inherit;
+            --width: calc(var(--height) * 3/4);
+            --entry-delay: 0ms;
+            width: var(--width);
+            height: var(--height);
+        }
+
+        .card > * {
+            position: absolute;
+            width: var(--width);
+            height: var(--height);
+            background: var(--color);
+            color: var(--textcolor);
+            transition: all 0.3s ease-in-out;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            text-align: center;
+            line-height: var(--height);
+            text-decoration-style: solid;
+            text-decoration-color: var(--textcolor);
+            text-decoration-line: underline;
+            font-size: 2.5rem;
+            font-style: oblique;
+        }
+
+        .card > :nth-child(1) {
+            --color: orangered;
+            --textcolor: skyblue;
+            transform: rotateX(var(--rotation));
+        }
+
+        .card > :nth-child(2) {
+            --color: skyblue;
+            --textcolor: orangered;
+            transform: rotateX(calc(180deg + var(--rotation)));
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div>front</div>
+            <div>back</div>
+        </div>
+        <div class="card">
+            <div>front</div>
+            <div>back</div>
+        </div>
+        <div class="card">
+            <div>front</div>
+            <div>back</div>
+        </div>
+        <div class="card">
+            <div>front</div>
+            <div>back</div>
+        </div>
+        <div class="card">
+            <div>front</div>
+            <div>back</div>
+        </div>
+    </div>
+    <script>
+        document.querySelectorAll('.card').forEach(card => {
+            card.onmouseover = () => {
+                card.style.setProperty('--rotation', '180deg');
+            }
+            card.onmouseout = () => {
+                card.style.setProperty('--rotation', '0deg');
+            }
+        });
+    </script>
+</body>
+
+</html>
