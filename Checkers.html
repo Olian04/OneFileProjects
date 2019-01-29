@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Checkers</title>
+</head>
+<body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/brynja/cdn/brynja.js"></script>
+    <script>
+        const { render, extend } = brynja; 
+
+        const game = new Proxy({
+            winningStates: [
+                [1,1,1,0,0,0,0,0,0],
+                [0,0,0,1,1,1,0,0,0],
+                [0,0,0,0,0,0,1,1,1],
+                [1,0,0,1,0,0,1,0,0],
+                [0,1,0,0,1,0,0,1,0],
+                [0,0,1,0,0,1,0,0,1],
+                [1,0,0,0,1,0,0,0,1],
+                [0,0,1,0,1,0,1,0,0]
+            ],
+            board: [
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0
+            ],
+            currentPlayer: 1,
+            previousPlayer: 2,
+            winner: null
+        }, {
+            set(obj, key, value) {
+                obj[key] = value;
+                run();
+            }
+        });
+
+        const restart = () => {
+            game.winner = null;
+            game.currentPlayer = 1;
+            game.previousPlayer = 2;
+            game.board = [0,0,0,0,0,0,0,0,0];
+        }
+
+        const didPlayerWin = () => 
+            game.winningStates.some(state => 
+                state.every((shouldBeTaken, i) => 
+                    (shouldBeTaken === 0) || game.board[i] === game.currentPlayer
+                )
+            );
+
+        const run = () => {
+            render(_=>_
+                .child('div', _=>_
+                    .class(['board'])
+                    .children('div', game.board.length, (_, i)=>_
+                        .when(() => game.board[i] === 0 && game.winner === null, _=>_
+                            .on('click', () => {
+                                game.board[i] = game.currentPlayer;
+                                if (didPlayerWin()) {
+                                    game.winner = game.currentPlayer;
+                                }
+                                if (!game.winner) {
+                                    [ game.currentPlayer, game.previousPlayer ] = [game.previousPlayer, game.currentPlayer];
+                                }
+                            })
+                        )
+                        .when(() => game.board[i] === 1, _=>_
+                            .prop('style', `background: orangered`)
+                        )
+                        .when(() => game.board[i] === 2, _=>_
+                            .prop('style', `background: skyblue`)
+                        )
+                    )
+                )
+                .when(() => game.winner !== null, _=>_
+                    .child('h2', _=>_
+                        .text(`Congratulation player ${game.winner} you've won the game!`)
+                        .when(() => game.winner === 1, _=>_
+                            .prop('style', `color: orangered`),
+                        _=>_
+                            .prop('style', `color: skyblue`)
+                        )
+                    )
+                    .child('button', _=>_
+                        .text('Play again!')
+                        .on('click', () => {
+                            restart();
+                        })
+                    )
+                )
+            );
+        }
+        run();
+    </script>
+    <style>
+        .board {
+            position: relative;
+            display: grid;
+            grid-template-columns: auto auto auto;
+            grid-template-rows: auto auto auto;
+            grid-column-gap: 2px;
+            grid-row-gap: 2px;
+            width: 300px;
+            height: 300px;
+            background-color: grey;
+            padding: 10px;
+        }
+        .board > div {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            font-size: 30px;
+            text-align: center;
+        }
+    </style>
+</body>
+</html>
