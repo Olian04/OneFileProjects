@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Interpolation</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script src="https://cdn.jsdelivr.net/npm/ola"></script>
+  <script src="https://unpkg.com/brynja@2.2.4/cdn/brynja.js"></script>
+  <script>
+    const { render } = brynja;
+
+    const config = {
+      tailLength: 200,
+      tailCatchUp: i => 100,
+      tailSize: i => 10,
+    }
+
+    const mouse = { x: 100, y: 100 }
+    const tail = Array(config.tailLength).fill(0)
+      .map((_, i) => Ola({ x: 100, y: 100 }, config.tailCatchUp(i)))
+
+    const applyTailUpdate = ({ x, y }, [el, ...rest]) => {
+      el.set({ x, y });
+      if (rest.length > 0) {
+        applyTailUpdate({ x: el.x, y: el.y }, rest);
+      }
+    }
+
+    window.addEventListener('mousemove', ev => {
+      mouse.x = ev.clientX;
+      mouse.y = ev.clientY;
+    });
+
+    window.addEventListener('touchmove', ev => {
+      mouse.x = ev.changedTouches[0].clientX;
+      mouse.y = ev.changedTouches[0].clientY;
+    });
+
+    const update = () => {
+      applyTailUpdate(mouse, tail);
+      render(_ => _
+        .children('div', tail.length, (_, i) => _
+          .class(['box', 'red'])
+          .prop('style', `
+        width: ${config.tailSize(i)}px;
+        height: ${config.tailSize(i)}px;
+        left: ${tail[i].x - (config.tailSize(i)) / 2}px;
+        top: ${tail[i].y - (config.tailSize(i)) / 2}px;
+      `)
+        )
+        .child('div', _ => _
+          .class(['box', 'blue'])
+          .prop('style', `
+        width: 60px;
+        height: 60px;
+        left: ${mouse.x - 30}px;
+        top: ${mouse.y - 30}px;
+      `)
+        )
+      );
+    }
+
+    setInterval(update, 1);
+  </script>
+</body>
+
+</html>
