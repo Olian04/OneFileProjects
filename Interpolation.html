@@ -64,7 +64,11 @@
 
     const update = () => {
       applyTailUpdate(mouse, tail);
+    }
+
+    const draw = () => {
       render(_ => _
+        .id('root')
         .children('div', tail.length, (_, i) => _
           .class(['box', 'red'])
           .prop('style', `
@@ -85,6 +89,12 @@
         )
       );
     }
+
+    const animationLoop = () => {
+      draw();
+      requestAnimationFrame(animationLoop);
+    }
+    requestAnimationFrame(animationLoop);
 
     setInterval(update, 1);
   </script>
