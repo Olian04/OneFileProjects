@@ -81,6 +81,10 @@ window.onmousemove = ev => {
   mouse.x = ev.clientX;
   mouse.y = ev.clientY
 }
+window.addEventListener('touchmove', ev => {
+  mouse.x = ev.changedTouches[0].clientX;
+  mouse.y = ev.changedTouches[0].clientY;
+});
 
 const update = () => {
   applyTailUpdate(mouse, tail);
