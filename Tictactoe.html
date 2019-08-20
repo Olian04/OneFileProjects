@@ -57,7 +57,7 @@
                 .child('div', _=>_
                     .class(['board'])
                     .children('div', game.board.length, (_, i)=>_
-                        .when(() => game.board[i] === 0 && game.winner === null, _=>_
+                        .when(game.board[i] === 0 && game.winner === null, _=>_
                             .on('click', () => {
                                 game.board[i] = game.currentPlayer;
                                 if (didPlayerWin()) {
@@ -68,15 +68,15 @@
                                 }
                             })
                         )
-                        .when(() => game.board[i] === 1, _=>_
+                        .when(game.board[i] === 1, _=>_
                             .prop('style', `background: orangered`)
                         )
-                        .when(() => game.board[i] === 2, _=>_
+                        .when(game.board[i] === 2, _=>_
                             .prop('style', `background: skyblue`)
                         )
                     )
                 )
-                .when(() => game.winner !== null, _=>_
+                .when(game.winner !== null, _=>_
                     .child('h2', _=>_
                         .text(`Congratulation player ${game.winner} you've won the game!`)
                         .when(() => game.winner === 1, _=>_
