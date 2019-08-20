@@ -63,7 +63,7 @@ const { render } = brynja;
 const config = {
 	tailLength: 100,
   tailCatchUp: i => 100/(1+i),
-  tailSize: i => 100 - (100/config.tailLength)*i,
+  tailSize: i => 100 - i,
 }
 
 const mouse = { x: 100, y: 100 }
